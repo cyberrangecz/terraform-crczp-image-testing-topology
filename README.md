@@ -54,5 +54,5 @@ Terraform module which extends [sandbox-ci module](https://gitlab.ics.muni.cz/mu
 
 | Name | Description |
 |------|-------------|
-| <a name="output_pool_url"></a> [pool\_url](#output\_pool\_url) | n/a |
+| <a name="output_pool_url"></a> [pool\_url](#output\_pool\_url) | `pool_url` output from `sandbox-ci` module. |
 <!-- END_TF_DOCS -->
