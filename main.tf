@@ -38,6 +38,9 @@ resource "openstack_images_image_v2" "test_image" {
     replace_triggered_by = [
       gitlab_branch.gitlab_branch
     ]
+    ignore_changes = [
+      local_file_path
+    ]
   }
 }
 
