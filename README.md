@@ -1,6 +1,6 @@
 # terraform-kypo-image-testing-topology
 
-Terraform module which extends [sandbox-ci module](https://gitlab.ics.muni.cz/muni-kypo-images/terraform-kypo-sandbox-ci) to be used for testing KYPO CRP images.
+Terraform module which extends [sandbox module](https://github.com/cyberrangecz/terraform-crczp-sandbox) to be used for testing CRCZP images.
 
 
 <!-- BEGIN_TF_DOCS -->
