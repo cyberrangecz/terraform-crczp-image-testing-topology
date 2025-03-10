@@ -1,23 +1,19 @@
 terraform {
   required_providers {
-    kypo = {
-      source  = "vydrazde/kypo"
+    crczp = {
+      source  = "cyberrangecz/crczp"
       version = ">= 0.1.0"
     }
     openstack = {
       source  = "terraform-provider-openstack/openstack"
       version = "~> 1.54"
     }
-    gitlab = {
-      source  = "gitlabhq/gitlab"
-      version = "~> 16.10"
-    }
   }
 }
 
 resource "openstack_images_image_v2" "test_image" {
   name             = "${var.image_name}-${var.rev}"
-  local_file_path  = "target-qemu/${var.image_name}"
+  local_file_path  = local._image_local_path
   container_format = "bare"
   disk_format      = "raw"
 
@@ -31,16 +27,7 @@ resource "openstack_images_image_v2" "test_image" {
     os_distro                              = var.os_distro
     "owner_specified.openstack.version"    = var.rev
     "owner_specified.openstack.gui_access" = var.gui_access
-    "owner_specified.openstack.created_by" = "munikypo"
-  }
-
-  lifecycle {
-    replace_triggered_by = [
-      gitlab_branch.gitlab_branch
-    ]
-    ignore_changes = [
-      local_file_path
-    ]
+    "owner_specified.openstack.custom"     = "true"
   }
 }
 
@@ -49,38 +36,34 @@ resource "local_file" "topology" {
   content  = replace(file("topology.yml"), "IMAGE_NAME", openstack_images_image_v2.test_image.name)
 }
 
-resource "gitlab_branch" "gitlab_branch" {
-  name    = "test-${var.rev}"
-  ref     = var.rev
-  project = var.project_id
-}
-
-resource "null_resource" "git_commit" {
+resource "terraform_data" "git_branch" {
+  input = {
+    branch_name = "test-${var.rev}"
+    topology    = local_file.topology.content_sha256
+  }
   provisioner "local-exec" {
     command = <<EOT
-      git config user.name "Service KYPO Images"; git config user.email "485514@muni.cz"
-      git fetch
-      git switch ${gitlab_branch.gitlab_branch.name}
-      git add ${local_file.topology.filename}
-      git commit -m "Replace IMAGE_NAME"
-      git push https://root:${var.project_access_token}@${var.project_url}.git ${gitlab_branch.gitlab_branch.name}
+    git switch -c ${self.input.branch_name}
+    git add ${local_file.topology.filename}
+    git commit -m "${var.commit_message}" --author "${var.commit_author}"
+    git push origin ${self.input.branch_name}
     EOT
   }
-
-  triggers = {
-    topology      = local_file.topology.content_sha256
-    gitlab_branch = gitlab_branch.gitlab_branch.name
+  provisioner "local-exec" {
+    when    = destroy
+    command = <<EOT
+    git push --delete origin ${self.input.branch_name}
+    EOT
   }
 }
 
 module "sandbox" {
-  source        = "gitlab.ics.muni.cz/muni-kypo-images/sandbox-ci/kypo"
-  project_url   = var.project_url
-  rev           = gitlab_branch.gitlab_branch.name
-  kypo_endpoint = var.kypo_endpoint
+  source      = "cyberrangecz/sandbox/crczp"
+  project_url = var.project_url
+  rev         = terraform_data.git_branch.output.branch_name
 
   depends_on = [
     openstack_images_image_v2.test_image,
-    null_resource.git_commit
+    terraform_data.git_branch
   ]
 }

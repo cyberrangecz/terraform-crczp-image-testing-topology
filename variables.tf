@@ -1,11 +1,6 @@
-variable "kypo_endpoint" {
-  type        = string
-  description = "Url to the KYPO CRP instance."
-}
-
 variable "image_name" {
   type        = string
-  description = "Short name of the image and image file in `./target-qemu`."
+  description = "First part of the name of the created image in OpenStack. Is followed by the `rev`."
 }
 
 variable "rev" {
@@ -28,18 +23,29 @@ variable "gui_access" {
   description = "`owner_specified.openstack.gui_access` of the created OpenStack image."
 }
 
-variable "project_id" {
-  type        = number
-  description = "Id of the GitLab repository to test."
-}
-
 variable "project_url" {
   type        = string
-  description = "Url to the GitLab repository without `https://`."
+  description = "Url to the Git repository."
 }
 
-variable "project_access_token" {
+variable "commit_author" {
   type        = string
-  description = "Access token with write permissions to the GitLab repository."
-  sensitive   = true
+  description = "Commit author of the created Git commit, in form `A U Thor <author@example.com>`."
+  default     = "Terraform <ci@example.com>"
+}
+
+variable "commit_message" {
+  type        = string
+  description = "Commit message of the created Git commit."
+  default     = "Replace IMAGE_NAME"
+}
+
+variable "image_local_path" {
+  type        = string
+  default     = null
+  description = "The local path to the OpenStack image to be tested. Defaults to `target-qemu/{var.image_name}`."
+}
+
+locals {
+  _image_local_path = var.image_local_path != null ? var.image_local_path : "target-qemu/${var.image_name}"
 }
