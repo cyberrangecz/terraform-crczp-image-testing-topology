@@ -2,7 +2,7 @@ terraform {
   required_providers {
     crczp = {
       source  = "cyberrangecz/crczp"
-      version = ">= 0.1.0"
+      version = ">= 0.2.0"
     }
     openstack = {
       source  = "terraform-provider-openstack/openstack"
@@ -58,9 +58,12 @@ resource "terraform_data" "git_branch" {
 }
 
 module "sandbox" {
-  source      = "cyberrangecz/sandbox/crczp"
-  project_url = var.project_url
-  rev         = terraform_data.git_branch.output.branch_name
+  source  = "cyberrangecz/sandbox/crczp"
+  version = ">= 0.2.0"
+
+  project_url         = var.project_url
+  rev                 = terraform_data.git_branch.output.branch_name
+  refresh_image_cache = true
 
   depends_on = [
     openstack_images_image_v2.test_image,
