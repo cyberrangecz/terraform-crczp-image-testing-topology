@@ -8,7 +8,7 @@ Terraform module which extends [sandbox module](https://github.com/cyberrangecz/
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_crczp"></a> [crczp](#requirement\_crczp) | >= 0.1.0 |
+| <a name="requirement_crczp"></a> [crczp](#requirement\_crczp) | >= 0.2.0 |
 | <a name="requirement_openstack"></a> [openstack](#requirement\_openstack) | ~> 1.54 |
 
 ## Providers
@@ -23,7 +23,7 @@ Terraform module which extends [sandbox module](https://github.com/cyberrangecz/
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_sandbox"></a> [sandbox](#module\_sandbox) | cyberrangecz/sandbox/crczp | n/a |
+| <a name="module_sandbox"></a> [sandbox](#module\_sandbox) | cyberrangecz/sandbox/crczp | >= 0.2.0 |
 
 ## Resources
 
