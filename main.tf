@@ -4,36 +4,12 @@ terraform {
       source  = "cyberrangecz/crczp"
       version = ">= 0.2.0"
     }
-    openstack = {
-      source  = "terraform-provider-openstack/openstack"
-      version = "~> 1.54"
-    }
-  }
-}
-
-resource "openstack_images_image_v2" "test_image" {
-  name             = "${var.image_name}-${var.rev}"
-  local_file_path  = local._image_local_path
-  container_format = "bare"
-  disk_format      = "raw"
-
-  properties = {
-    hw_scsi_model                          = "virtio-scsi"
-    hw_disk_bus                            = "scsi"
-    hw_rng_model                           = "virtio"
-    hw_qemu_guest_agent                    = "yes"
-    os_require_quiesce                     = "yes"
-    os_type                                = var.os_type
-    os_distro                              = var.os_distro
-    "owner_specified.openstack.version"    = var.rev
-    "owner_specified.openstack.gui_access" = var.gui_access
-    "owner_specified.openstack.custom"     = "true"
   }
 }
 
 resource "local_file" "topology" {
   filename = "topology.yml"
-  content  = replace(file("topology.yml"), "IMAGE_NAME", openstack_images_image_v2.test_image.name)
+  content  = replace(file("topology.yml"), "IMAGE_NAME", "${var.image_name}-${var.rev}")
 }
 
 resource "terraform_data" "git_branch" {
@@ -66,7 +42,6 @@ module "sandbox" {
   refresh_image_cache = true
 
   depends_on = [
-    openstack_images_image_v2.test_image,
     terraform_data.git_branch
   ]
 }
