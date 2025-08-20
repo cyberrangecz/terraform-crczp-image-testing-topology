@@ -15,7 +15,8 @@ resource "openstack_images_image_v2" "test_image" {
   name             = "${var.image_name}-${var.rev}"
   local_file_path  = local._image_local_path
   container_format = "bare"
-  disk_format      = "raw"
+  disk_format      = "qcow2"
+  visibility       = "public"
 
   properties = {
     hw_scsi_model                          = "virtio-scsi"
