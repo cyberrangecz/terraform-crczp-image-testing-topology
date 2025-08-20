@@ -39,7 +39,7 @@ resource "local_file" "topology" {
 
 resource "terraform_data" "git_branch" {
   input = {
-    branch_name = "test-${var.rev}"
+    branch_name = "citest-${var.rev}"
     topology    = local_file.topology.content_sha256
   }
   provisioner "local-exec" {
