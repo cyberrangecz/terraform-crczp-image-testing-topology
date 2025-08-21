@@ -37,7 +37,6 @@ Terraform module which extends [sandbox module](https://github.com/cyberrangecz/
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_commit_author"></a> [commit\_author](#input\_commit\_author) | Commit author of the created Git commit, in form `A U Thor <author@example.com>`. | `string` | `"Terraform <ci@example.com>"` | no |
 | <a name="input_commit_message"></a> [commit\_message](#input\_commit\_message) | Commit message of the created Git commit. | `string` | `"Replace IMAGE_NAME"` | no |
 | <a name="input_gui_access"></a> [gui\_access](#input\_gui\_access) | `owner_specified.openstack.gui_access` of the created OpenStack image. | `bool` | n/a | yes |
 | <a name="input_image_local_path"></a> [image\_local\_path](#input\_image\_local\_path) | The local path to the OpenStack image to be tested. Defaults to `target-qemu/{var.image_name}`. | `string` | `null` | no |
