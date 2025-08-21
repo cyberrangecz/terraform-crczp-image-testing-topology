@@ -28,12 +28,6 @@ variable "project_url" {
   description = "Url to the Git repository."
 }
 
-variable "commit_author" {
-  type        = string
-  description = "Commit author of the created Git commit, in form `A U Thor <author@example.com>`."
-  default     = "Terraform <ci@example.com>"
-}
-
 variable "commit_message" {
   type        = string
   description = "Commit message of the created Git commit."

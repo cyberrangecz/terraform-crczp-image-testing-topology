@@ -13,8 +13,6 @@ provider "crczp" {
 }
 
 provider "openstack" {
-  auth_url = "https://identity.cloud.muni.cz/v3"
-  region   = "brno1"
 }
 
 variable "PROJECT_URL" {}
