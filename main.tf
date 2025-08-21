@@ -44,9 +44,11 @@ resource "terraform_data" "git_branch" {
   }
   provisioner "local-exec" {
     command = <<EOT
+    git config user.name "github-actions[bot]"
+    git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
     git switch -c ${self.input.branch_name}
     git add ${local_file.topology.filename}
-    git commit -m "${var.commit_message}" --author "${var.commit_author}"
+    git commit -m "${var.commit_message}"
     git push origin ${self.input.branch_name}
     EOT
   }
