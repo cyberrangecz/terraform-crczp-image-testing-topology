@@ -42,6 +42,7 @@ resource "terraform_data" "git_branch" {
     branch_name = "citest-${var.rev}"
     topology    = local_file.topology.content_sha256
   }
+  triggers_replace = [local_file.topology]
   provisioner "local-exec" {
     command = <<EOT
     git config user.name "github-actions[bot]"
