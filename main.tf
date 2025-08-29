@@ -30,6 +30,10 @@ resource "openstack_images_image_v2" "test_image" {
     "owner_specified.openstack.gui_access" = var.gui_access
     "owner_specified.openstack.custom"     = "true"
   }
+
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 resource "local_file" "topology" {
