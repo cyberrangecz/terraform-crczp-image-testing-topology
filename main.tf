@@ -49,12 +49,12 @@ resource "terraform_data" "git_branch" {
   triggers_replace = [local_file.topology]
   provisioner "local-exec" {
     command = <<EOT
-    git config user.name "github-actions[bot]"
-    git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+    PREV_HEAD=$(git rev-parse --abbrev-ref HEAD)
     git switch -c ${self.input.branch_name}
     git add ${local_file.topology.filename}
-    git commit -m "${var.commit_message}"
+    git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "${var.commit_message}"
     git push origin ${self.input.branch_name}
+    git switch $PREV_HEAD
     EOT
   }
   provisioner "local-exec" {
