@@ -18,18 +18,7 @@ resource "openstack_images_image_v2" "test_image" {
   disk_format      = "qcow2"
   visibility       = "public"
 
-  properties = {
-    hw_scsi_model                          = "virtio-scsi"
-    hw_disk_bus                            = "scsi"
-    hw_rng_model                           = "virtio"
-    hw_qemu_guest_agent                    = "yes"
-    os_require_quiesce                     = "yes"
-    os_type                                = var.os_type
-    os_distro                              = var.os_distro
-    "owner_specified.openstack.version"    = var.rev
-    "owner_specified.openstack.gui_access" = var.gui_access
-    "owner_specified.openstack.custom"     = "true"
-  }
+  properties = local.image_properties
 
   lifecycle {
     ignore_changes = all

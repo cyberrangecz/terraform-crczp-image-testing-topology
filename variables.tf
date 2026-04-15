@@ -40,6 +40,29 @@ variable "image_local_path" {
   description = "The local path to the OpenStack image to be tested. Defaults to `target-qemu/{var.image_name}`."
 }
 
+variable "image_properties_override" {
+  type        = any
+  default     = {}
+  description = "Overrides to `default_image_properties`. Set a property to null to not include it."
+}
+
+
 locals {
   _image_local_path = var.image_local_path != null ? var.image_local_path : "target-qemu/${var.image_name}"
+  default_image_properties = {
+    hw_scsi_model                          = "virtio-scsi"
+    hw_disk_bus                            = "scsi"
+    hw_rng_model                           = "virtio"
+    hw_qemu_guest_agent                    = "yes"
+    os_require_quiesce                     = "yes"
+    os_type                                = var.os_type
+    os_distro                              = var.os_distro
+    "owner_specified.openstack.version"    = var.rev
+    "owner_specified.openstack.gui_access" = var.gui_access
+    "owner_specified.openstack.custom"     = "true"
+  }
+  merged_image_properties = merge(local.default_image_properties, var.image_properties_override)
+  image_properties = {
+    for k, v in local.merged_image_properties : k => v if v != null
+  }
 }
